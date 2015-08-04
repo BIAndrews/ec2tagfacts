@@ -69,7 +69,7 @@ else
         fact.gsub(/\s+/, "_")
         #puts "Setting fact #{fact} to #{child['Value']}"
 
-        Facter.add("#{fact}", :timeout => 5) do
+        Facter.add("#{fact}") do
           setcode do
             child['Value']
           end
