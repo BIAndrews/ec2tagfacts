@@ -33,7 +33,7 @@ class ec2tagfacts::params {
   # case just in case I'm wrong about SLES or they change in the future
 
   case $::operatingsystem {
-    'RedHat', 'Fedora', 'CentOS', 'Scientific', 'SLC', 'Ascendos', 'CloudLinux', 'PSBM', 'OracleLinux', 'OVS', 'OEL': {
+    'RedHat', 'RedHat/Amazon', 'Fedora', 'CentOS', 'Scientific', 'SLC', 'Ascendos', 'CloudLinux', 'PSBM', 'OracleLinux', 'OVS', 'OEL': {
       $pippkg       = 'python-pip'
       $rubyjsonpkg  = 'ruby-json'
       $awscli       = 'awscli'
