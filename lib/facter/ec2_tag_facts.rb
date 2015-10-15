@@ -52,37 +52,40 @@ else
   # Get the aws ec2 instance tags as a JSON string
   #
 
-  jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region}`
-  #puts "JSON is...\n#{jsonString}"
-  hash = JSON.parse(jsonString)
+  begin
+    jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region}`
+    #puts "JSON is...\n#{jsonString}"
+    hash = JSON.parse(jsonString)
 
-  if hash.is_a? Hash then
+    if hash.is_a? Hash then
 
-    #puts "hash is a hash"
+      #puts "hash is a hash"
 
-    if hash.has_key?("Tags") then
+      if hash.has_key?("Tags") then
 
-      hash['Tags'].each do |child|
+        hash['Tags'].each do |child|
 
-        fact = "ec2_tag_#{child['Key']}"
-        fact.downcase!
-        fact.gsub(/\s+/, "_")
-        #puts "Setting fact #{fact} to #{child['Value']}"
+          fact = "ec2_tag_#{child['Key']}"
+          fact.downcase!
+          fact.gsub(/\s+/, "_")
+          #puts "Setting fact #{fact} to #{child['Value']}"
 
-        Facter.add("#{fact}") do
-          setcode do
-            child['Value']
+          Facter.add("#{fact}") do
+            setcode do
+              child['Value']
+            end
           end
+
         end
+
+      else
+
+        #puts "No tags found"
 
       end
 
-    else
-
-      #puts "No tags found"
-
     end
-
+  rescue # Ignore if awscli had any issues
   end
 
 end
