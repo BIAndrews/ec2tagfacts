@@ -29,13 +29,16 @@ class ec2tagfacts::params {
 
   $aws_cli_ini_settings   = '/root/.aws/credentials'
 
-  # It happens to be that packages are all named the same but I used a 
-  # case just in case I'm wrong about SLES or they change in the future
-
   case $::operatingsystem {
-    'RedHat', 'Amazon', 'Fedora', 'CentOS', 'Scientific', 'SLC', 'Ascendos', 'CloudLinux', 'PSBM', 'OracleLinux', 'OVS', 'OEL': {
+    'RedHat', 'Fedora', 'CentOS', 'Scientific', 'SLC', 'Ascendos', 'CloudLinux', 'PSBM', 'OracleLinux', 'OVS', 'OEL': {
       $pippkg       = 'python-pip'
       $rubyjsonpkg  = 'ruby-json'
+      $awscli       = 'awscli'
+      $enable_epel  = true
+    }
+    'Amazon': {
+      $pippkg       = 'python-pip'
+      $rubyjsonpkg  = 'rubygem18-json'
       $awscli       = 'awscli'
       $enable_epel  = true
     }

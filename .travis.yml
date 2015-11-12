@@ -4,3 +4,12 @@ script: "bundle exec rake spec"
 rvm:
   - 1.8.7
   - 1.9.3
+  - 2.0.0
+matrix:
+  exclude:
+  - rvm: 2.0.0
+    env: PUPPET_VERSION="~> 2.7.0"
+  - rvm: 2.0.0
+    env: PUPPET_VERSION="~> 3.1.0"
+  - rvm: 1.9.3
+    env: PUPPET_VERSION="~> 2.7.0"

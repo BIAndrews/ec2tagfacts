@@ -70,29 +70,30 @@ class ec2tagfacts (
     Class['epel'] -> Package[$pippkg]
   }
 
-  $directory = dirname($aws_cli_ini_settings)
-
   package { $pippkg:
     ensure => 'installed',
   }
 
-  package { $rubyjsonpkg:
-    ensure => 'installed',
+  if $rubyjsonpkg != undef {
+    package { $rubyjsonpkg:
+      ensure => 'installed',
+    }
   }
 
   package { $awscli:
     ensure   => 'installed',
     provider => 'pip',
-    require  => [Package[$pippkg],Package[$rubyjsonpkg]],
+    require  => Package[$pippkg],
   }
 
-  file { $directory:
-    ensure  => directory,
-    require => Package[$awscli],
-    recurse => true,
-  }
+  if ($aws_secret_access_key != undef) and ($aws_access_key_id != undef) { 
 
-  if $aws_access_key_id != undef {
+    $directory = dirname($aws_cli_ini_settings)
+    file { $directory:
+      ensure  => directory,
+      require => Package[$awscli],
+      recurse => true,
+    }
     ini_setting { 'aws_access_key_id setting':
       ensure  => present,
       path    => $aws_cli_ini_settings,
@@ -101,9 +102,6 @@ class ec2tagfacts (
       value   => $aws_access_key_id,
       require => File[$directory],
     }
-  }
-
-  if $aws_secret_access_key != undef {
     ini_setting { 'aws_secret_access_key setting':
       ensure  => present,
       path    => $aws_cli_ini_settings,
@@ -112,5 +110,7 @@ class ec2tagfacts (
       value   => $aws_secret_access_key,
       require => File[$directory],
     }
+
   }
+
 }
