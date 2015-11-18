@@ -37,10 +37,10 @@ class ec2tagfacts::params {
       $enable_epel  = true
     }
     'Amazon': {
-      $pippkg       = 'python-pip'
+      $pippkg       = undef
       $rubyjsonpkg  = 'rubygem18-json'
-      $awscli       = 'awscli'
-      $enable_epel  = true
+      $awscli       = 'aws-cli'
+      $enable_epel  = false
     }
     'ubuntu', 'debian': {
       $pippkg       = 'python-pip'

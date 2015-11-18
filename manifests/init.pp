@@ -70,8 +70,10 @@ class ec2tagfacts (
     Class['epel'] -> Package[$pippkg]
   }
 
-  package { $pippkg:
-    ensure => 'installed',
+  if $pippkg != undef {
+    package { $pippkg:
+      ensure => 'installed',
+    }
   }
 
   if $rubyjsonpkg != undef {
@@ -83,7 +85,6 @@ class ec2tagfacts (
   package { $awscli:
     ensure   => 'installed',
     provider => 'pip',
-    require  => Package[$pippkg],
   }
 
   if ($aws_secret_access_key != undef) and ($aws_access_key_id != undef) { 
