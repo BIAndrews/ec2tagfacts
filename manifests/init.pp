@@ -71,20 +71,29 @@ class ec2tagfacts (
   }
 
   if $pippkg != undef {
+
     package { $pippkg:
       ensure => 'installed',
     }
+
+    package { $awscli:
+      ensure   => 'installed',
+      provider => 'pip',
+      require  => Package[$pippkg],
+    }
+
+  } else {
+
+    package { $awscli:
+      ensure   => 'installed',
+    }
+
   }
 
   if $rubyjsonpkg != undef {
     package { $rubyjsonpkg:
       ensure => 'installed',
     }
-  }
-
-  package { $awscli:
-    ensure   => 'installed',
-    provider => 'pip',
   }
 
   if ($aws_secret_access_key != undef) and ($aws_access_key_id != undef) { 
