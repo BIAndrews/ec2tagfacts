@@ -45,10 +45,7 @@ Console -> Identity & Access Management -> Roles -> Create New Role -> Role Name
         {
             "Effect": "Allow",
             "Action": [
-                "ec2:DescribeInstances",
-                "ec2:DescribeImages",
-                "ec2:DescribeTags",
-                "ec2:DescribeSnapshots",
+                "ec2:DescribeTags"
             ],
             "Resource": "*"
         }
@@ -69,8 +66,7 @@ This is the option available to existing EC2 instance without Role assignments. 
    "Statement": [{
       "Effect": "Allow",
       "Action": [
-         "ec2:DescribeInstances", "ec2:DescribeImages",
-         "ec2:DescribeTags", "ec2:DescribeSnapshots"
+         "ec2:DescribeTags"
       ],
       "Resource": "*"
    }

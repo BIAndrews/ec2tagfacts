@@ -1,6 +1,6 @@
 {
   "name": "bryana-ec2tagfacts",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "author": "Bryan Andrews",
   "summary": "AWS EC2 tags exported as puppet facts and AWS cli tool installed.",
   "license": "Apache-2.0",
@@ -15,12 +15,14 @@
         "2014.03",
         "2014.09",
         "2015.03",
-        "2015.09"
+        "2015.09",
+        "2016.03"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
+        "5",
         "6",
         "7"
       ]
@@ -28,6 +30,7 @@
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
+        "5",
         "6",
         "7"
       ]
@@ -42,6 +45,7 @@
     {
       "operatingsystem": "Scientific",
       "operatingsystemrelease": [
+        "5",
         "6",
         "7"
       ]
@@ -64,23 +68,26 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
+        "10.04",
         "12.04",
-        "14.04"
+        "14.04",
+        "15.10",
+        "16.04"
       ]
+    },
+    {
+      "operatingsystem": "Darwin",
+      "operatingsystemrelease": ["10.8", "11.0", "11.4.2", "12.0", "13.0", "14.0", "14.5", "15.0", "15.4"]
     }
   ],
   "requirements": [
     {
       "name": "pe",
-      "version_requirement": ">= 3.0.0"
+      "version_requirement": ">=3.7.0 < 2016.0.0"
     },
     {
       "name": "puppet",
-      "version_requirement": "3.x"
-    },
-    {
-      "name": "puppet",
-      "version_requirement": "4.x"
+      "version_requirement": ">= 3.3.0"
     }
   ],
   "dependencies": [
