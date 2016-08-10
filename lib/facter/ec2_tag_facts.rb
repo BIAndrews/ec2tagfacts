@@ -53,7 +53,7 @@ else
   #
 
   begin
-    jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region}`
+    jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json`
     #puts "JSON is...\n#{jsonString}"
     hash = JSON.parse(jsonString)
 
