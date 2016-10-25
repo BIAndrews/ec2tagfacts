@@ -1,13 +1,13 @@
 {
   "name": "bryana-ec2tagfacts",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "author": "Bryan Andrews",
   "summary": "AWS EC2 tags exported as puppet facts and AWS cli tool installed.",
   "license": "Apache-2.0",
   "source": "git@github.com:BIAndrews/ec2tagfacts.git",
   "project_page": "https://github.com/BIAndrews/ec2tagfacts",
   "issues_url": "https://github.com/BIAndrews/ec2tagfacts/issues",
-  "tags": ["aws", "ec2", "amazon", "tags", "facter"],
+  "tags": ["aws", "ec2", "amazon", "tags", "facter", "facts"],
   "operatingsystem_support": [
     {
       "operatingsystem":"Amazon",
