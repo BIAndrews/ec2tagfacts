@@ -21,7 +21,7 @@ This turns EC2 instance tags into puppet facts. For example: `ec2_tag_*tagname*`
 
 ### What ec2tagfacts affects
 
-* Tag names are prepended with `ec2_tag_`, converted to all lowercase, and spaces are converted to underscores.
+* Tag names are prepended with `ec2_tag_`, converted to all lowercase, and non-word character are converted to underscores.
 * You can now use EC2 tags in puppet classes, for example `$::ec2_tag_name`.
 * EC2 tags are then added to facter.
 * Python pip is installed in order to install the aws cli tool with pip.
