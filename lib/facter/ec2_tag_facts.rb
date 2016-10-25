@@ -67,7 +67,7 @@ else
 
           fact = "ec2_tag_#{child['Key']}"
           fact.downcase!
-          fact.gsub(/\s+/, "_")
+          fact.gsub!(/\W+/, "_")
           #puts "Setting fact #{fact} to #{child['Value']}"
 
           Facter.add("#{fact}") do
