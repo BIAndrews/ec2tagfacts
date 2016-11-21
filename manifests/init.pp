@@ -96,7 +96,7 @@ class ec2tagfacts (
     }
   }
 
-  if ($aws_secret_access_key != undef) and ($aws_access_key_id != undef) { 
+  if ($aws_secret_access_key != undef) and ($aws_access_key_id != undef) {
 
     $directory = dirname($aws_cli_ini_settings)
     file { $directory:
