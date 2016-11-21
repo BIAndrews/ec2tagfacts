@@ -5,7 +5,7 @@
 # === Variables
 #
 # [*pippkg*]
-#   Set in ec2tagfacts::params, this is the Python pip package name by OS 
+#   Set in ec2tagfacts::params, this is the Python pip package name by OS
 #   family.
 #
 # [*awscli*]
@@ -30,23 +30,35 @@ class ec2tagfacts::params {
   $aws_cli_ini_settings   = '/root/.aws/credentials'
 
   case $::operatingsystem {
-    'CentOS': {
-      case $::operatingsystemrelease {
-        /^7.*/: {
+    'CentOS', 'RedHat' , 'OEL', 'OracleLinux': {
+      if $::operatingsystemrelease.scanf("%f")[0] >= 7.0 {
           $pippkg       = 'python-pip'
           $rubyjsonpkg  = 'rubygem-json'
           $awscli       = 'awscli'
           $enable_epel  = true
-        }
-        default: {
-          $pippkg       = 'python-pip'
-          $rubyjsonpkg  = 'ruby-json'
-          $awscli       = 'awscli'
-          $enable_epel  = true
-        }
+      }
+      else {
+        $pippkg       = 'python-pip'
+        $rubyjsonpkg  = 'ruby-json'
+        $awscli       = 'awscli'
+        $enable_epel  = true
       }
     }
-    'RedHat', 'Fedora', 'Scientific', 'SLC', 'Ascendos', 'CloudLinux', 'PSBM', 'OracleLinux', 'OVS', 'OEL': {
+    'Fedora': {
+      if $::operatingsystemrelease.scanf("%d")[0] >= 22 {
+          $pippkg       = 'python-pip'
+          $rubyjsonpkg  = 'rubygem-json'
+          $awscli       = 'awscli'
+          $enable_epel  = true
+      }
+      else {
+        $pippkg       = 'python-pip'
+        $rubyjsonpkg  = 'ruby-json'
+        $awscli       = 'awscli'
+        $enable_epel  = true
+      }
+    }
+    'Scientific', 'SLC', 'Ascendos', 'CloudLinux', 'PSBM', 'OVS': {
       $pippkg       = 'python-pip'
       $rubyjsonpkg  = 'ruby-json'
       $awscli       = 'awscli'
