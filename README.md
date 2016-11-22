@@ -185,6 +185,7 @@ TravisCI is currently testing 25 ruby+puppet environments on 49 OS flavor+parame
 * Ubuntu 14
 * Ubuntu 15
 * Ubuntu 16
+* Gentoo - _experimental_
 * Amazon Linux 2014 - _rspec nodeset not available for automated testing_
 * Amazon Linux 2015 - _rspec nodeset not available for automated testing_
 * Amazon Linux 2016 - _rspec nodeset not available for automated testing however this is the development reference platform_
