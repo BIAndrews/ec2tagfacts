@@ -25,19 +25,21 @@
 #
 # Copyright 2015 Bryan Andrews, unless otherwise noted.
 #
+#
+# NOTE: The unnecessary math below is to ensure the string is an int for comparison
+#
 class ec2tagfacts::params {
 
   $aws_cli_ini_settings   = '/root/.aws/credentials'
 
   case $::operatingsystem {
     'CentOS', 'RedHat' , 'OEL', 'OracleLinux': {
-      if $::operatingsystemrelease.scanf("%f")[0] >= 7.0 {
-          $pippkg       = 'python-pip'
-          $rubyjsonpkg  = 'rubygem-json'
-          $awscli       = 'awscli'
-          $enable_epel  = true
-      }
-      else {
+      if ($::operatingsystemmajrelease + 0) >= (7 + 0) {
+        $pippkg       = 'python-pip'
+        $rubyjsonpkg  = 'rubygem-json'
+        $awscli       = 'awscli'
+        $enable_epel  = true
+      } else {
         $pippkg       = 'python-pip'
         $rubyjsonpkg  = 'ruby-json'
         $awscli       = 'awscli'
@@ -45,13 +47,12 @@ class ec2tagfacts::params {
       }
     }
     'Fedora': {
-      if $::operatingsystemrelease.scanf("%d")[0] >= 22 {
-          $pippkg       = 'python-pip'
-          $rubyjsonpkg  = 'rubygem-json'
-          $awscli       = 'awscli'
-          $enable_epel  = true
-      }
-      else {
+      if ($::operatingsystemmajrelease + 0) >= (22 + 0) {
+        $pippkg       = 'python-pip'
+        $rubyjsonpkg  = 'rubygem-json'
+        $awscli       = 'awscli'
+        $enable_epel  = true
+      } else {
         $pippkg       = 'python-pip'
         $rubyjsonpkg  = 'ruby-json'
         $awscli       = 'awscli'

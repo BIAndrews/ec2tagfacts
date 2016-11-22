@@ -66,7 +66,7 @@ class ec2tagfacts (
   }
 
   if $enable_epel {
-    include epel
+    include ::epel
     Class['epel'] -> Package[$pippkg]
   }
 
@@ -91,8 +91,9 @@ class ec2tagfacts (
   }
 
   if $rubyjsonpkg != undef {
-    package { $rubyjsonpkg:
+    package { 'ruby-json-package':
       ensure => 'installed',
+      name   => $rubyjsonpkg,
     }
   }
 
