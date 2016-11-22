@@ -1,5 +1,7 @@
 # ec2tagfacts
 
+[![Build Status](https://travis-ci.org/BIAndrews/ec2tagfacts.svg?branch=master)](https://travis-ci.org/BIAndrews/ec2tagfacts)
+
 #### Table of Contents
 
 1. [Overview](#overview)
@@ -11,7 +13,8 @@
     * [R10k Example](#r10k-example)
 3. [Usage - Configuration options and additional functionality](#usage)
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
+5. [RSpec Testing - Automated QA tests](#rspec-testing)
+6. [Limitations - OS compatibility, etc.](#limitations)
 
 ## Overview
 
@@ -141,6 +144,15 @@ Optional. Change the location of the AWS cli credential ini file. Full path expe
 #####`enable_epel`
 
 Optional. True/false setting. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera.
+
+## RSpec Testing
+
+If bundle isn't already installed it is generally installed with `gem install bundle`.
+
+```
+bundle install
+rake spec
+```
 
 ## Limitations
 

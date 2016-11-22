@@ -4,6 +4,8 @@
 #
 #######################################
 
+# need ruby dev
+gem install io-console
 bundle install > /dev/null
 
 PUPPET_GEM_VERSION="~> 3.3.0"
