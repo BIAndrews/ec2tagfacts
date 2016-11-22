@@ -14,11 +14,12 @@
 3. [Usage - Configuration options and additional functionality](#usage)
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [RSpec Testing - Automated QA tests](#rspec-testing)
-6. [Limitations - OS compatibility, etc.](#limitations)
+    * [OS Support](#os-support)
+7. [Limitations - OS compatibility, etc.](#limitations)
 
 ## Overview
 
-This turns EC2 instance tags into puppet facts. For example: `$::ec2_tag_*tagname*` and structured as `$::ec2_tags['*tagname*']`. 
+This turns EC2 instance tags into puppet facts. For example: `$::ec2_tag_tagname` and structured as `$::ec2_tags['tagname']`. 
 
 ## Setup
 
@@ -156,7 +157,35 @@ bundle install
 rake spec
 ```
 
-TravisCI is currently testing 25 ruby+puppet environments on 38 OS flavor+parameter combinations. This is `950` tests per QA cycle.
+TravisCI is currently testing 25 ruby+puppet environments on 40 OS flavor+parameter combinations. This is `1,000` tests per QA cycle.
+
+### OS Support
+
+* RedHat 5
+* RedHat 6
+* RedHat 7
+* CentOS 5
+* CentOS 6
+* CentOS 7
+* Debian 6
+* Debian 7
+* Debian 8
+* OracleLinux 6
+* OracleLinux 7
+* Scientific Linux 5
+* Scientific Linux 6
+* Scientific Linux 7
+* SLES 10
+* SLES 11
+* SLES 12
+* Ubuntu 10
+* Ubuntu 12
+* Ubuntu 14
+* Ubuntu 15
+* Ubuntu 16
+* Amazon Linux 2014 - _rspec nodeset not available for automated testing_
+* Amazon Linux 2015 - _rspec nodeset not available for automated testing_
+* Amazon Linux 2016 - _rspec nodeset not available for automated testing however this is the development reference platform_
 
 ## Limitations
 
