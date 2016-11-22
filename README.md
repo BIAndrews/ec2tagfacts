@@ -18,14 +18,15 @@
 
 ## Overview
 
-This turns EC2 instance tags into puppet facts. For example: `ec2_tag_*tagname*`. 
+This turns EC2 instance tags into puppet facts. For example: `$::ec2_tag_*tagname*` and structured as `$::ec2_tags['*tagname*']`. 
 
 ## Setup
 
 ### What ec2tagfacts affects
 
 * Tag names are prepended with `ec2_tag_`, converted to all lowercase, and non-word character are converted to underscores.
-* You can now use EC2 tags in puppet classes, for example `$::ec2_tag_name`.
+* Tags are also available as a structured fact called `ec2_tags`
+* You can now use EC2 tags in puppet classes, for example `$::ec2_tag_name` or `$::ec2_tags['name']`.
 * EC2 tags are then added to facter.
 * Python pip is installed in order to install the aws cli tool with pip.
 * The AWS cli python package is installed.
@@ -82,6 +83,7 @@ This is the option available to existing EC2 instance without Role assignments. 
 Add this to your `Puppetfile`:
 ~~~
 mod 'bryana/ec2tagfacts', :latest
+mod 'puppetlabs-stdlib', :latest
 mod 'stahnma/epel', :latest
 mod 'puppetlabs/inifile', :latest
 ~~~
@@ -92,12 +94,12 @@ mod 'puppetlabs/inifile', :latest
 
 #### Role Method ####
 ~~~
-class { 'ec2tagfacts': }
+class { '::ec2tagfacts': }
 ~~~
 
 #### Access Key Method ####
 ~~~
-class { 'ec2tagfacts':
+class { '::ec2tagfacts':
   aws_access_key_id      => 'ASJSF34782SJGU',
   aws_secret_access_key  => 'SJG34861gaKHKaDfjq29gfASf427RGHSgesge',
 }

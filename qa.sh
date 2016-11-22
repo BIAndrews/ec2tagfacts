@@ -26,16 +26,16 @@ if [ $? -ne 0 ];then
   exit 1;
 fi
 
-PUPPET_GEM_VERSION="~> 4.2.3"
+PUPPET_GEM_VERSION="~> 4.8.0"
 bundle update > /dev/null
 rake spec
 
 if [ $? -ne 0 ];then
-  echo "ERROR with puppet 4.2"
+  echo "ERROR with puppet 4.8"
   exit 1;
 fi
 
 echo "
 
-Verified with puppet 3.3, 3.8, and 4.2
+Verified with puppet 3.3, 3.8, and 4.8
 "
