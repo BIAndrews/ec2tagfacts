@@ -154,6 +154,8 @@ bundle install
 rake spec
 ```
 
+TravisCI is currently testing 25 ruby+puppet environments on 38 OS flavor+parameter combinations. This is `950` tests per QA cycle.
+
 ## Limitations
 
 This is written for both CentOS/RHEL/Amazon based systems and Debian/Ubuntu based systems. EPEL is required for the RHEL family in order to obtain the python-pip package to install the AWS cli pip package and is automatically detected and setup. 
