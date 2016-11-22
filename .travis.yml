@@ -6,16 +6,34 @@ before_install:
   - rm Gemfile.lock || true
   - gem update bundler
 script: bundle exec rake test
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1.5
+  - 2.3.1
+env:
+  - PUPPET_GEM_VERSION="~> 3.3.0"
+  - PUPPET_GEM_VERSION="~> 3.4.0"
+  - PUPPET_GEM_VERSION="~> 3.5.0"
+  - PUPPET_GEM_VERSION="~> 3.6.0"
+  - PUPPET_GEM_VERSION="~> 3.7.0"
+  - PUPPET_GEM_VERSION="~> 3.8.0" FUTURE_PARSER=yes
+  - PUPPET_GEM_VERSION="~> 4.1.0"
+  - PUPPET_GEM_VERSION="~> 4.2.0" FUTURE_PARSER=yes
 matrix:
   fast_finish: true
-  include:
+  exclude:
+  - rvm: 2.1.5
+    env: PUPPET_GEM_VERSION="~> 3.3.0"
   - rvm: 2.3.1
-    env: PUPPET_GEM_VERSION="~> 4.0"
-  - rvm: 2.1.9
-    env: PUPPET_GEM_VERSION="~> 4.0"
-  - rvm: 2.1.5
-    env: PUPPET_GEM_VERSION="~> 3.0" FUTURE_PARSER="yes"
-  - rvm: 2.1.5
-    env: PUPPET_GEM_VERSION="~> 3.0"
-  - rvm: 1.9.3
-    env: PUPPET_GEM_VERSION="~> 3.0"
+    env: PUPPET_GEM_VERSION="~> 3.3.0"
+  - rvm: 2.3.1
+    env: PUPPET_GEM_VERSION="~> 3.4.0"
+  - rvm: 2.3.1
+    env: PUPPET_GEM_VERSION="~> 3.5.0"
+  - rvm: 2.3.1
+    env: PUPPET_GEM_VERSION="~> 3.6.0"
+  - rvm: 2.3.1
+    env: PUPPET_GEM_VERSION="~> 3.7.0"
+  - rvm: 2.3.1
+    env: PUPPET_GEM_VERSION="~> 3.8.0" FUTURE_PARSER=yes
