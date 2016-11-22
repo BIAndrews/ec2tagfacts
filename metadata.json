@@ -67,6 +67,12 @@
       ]
     },
     {
+      "operatingsystem": "Gentoo",
+      "operatingsystemrelease": [
+        "1.0"
+      ]
+    },
+    {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
         "10.04",
