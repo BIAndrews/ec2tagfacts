@@ -140,7 +140,7 @@ else
         # Set structured fact
         #
 
-        if (defined?(result)) != nil
+        if defined?(result) != nil
           Facter.add(:ec2_tags) do
             setcode do
               result
