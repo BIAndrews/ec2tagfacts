@@ -21,6 +21,8 @@ group :test do
   gem 'puppet-lint-resource_reference_syntax'
 
   gem 'json_pure', '<= 2.0.1' if RUBY_VERSION < '2.0.0'
+
+  gem 'syck', if RUBY_VERSION >= '2.3.0'
 end
 
 group :development do
