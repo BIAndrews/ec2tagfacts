@@ -1,6 +1,8 @@
 # ec2tagfacts
 
 [![Build Status](https://travis-ci.org/BIAndrews/ec2tagfacts.svg?branch=master)](https://travis-ci.org/BIAndrews/ec2tagfacts)
+[![Puppet Forge Downloads](https://img.shields.io/puppetforge/dt/bryana/ec2tagfacts.svg)](https://forge.puppet.com/bryana/ec2tagfacts)
+[![Code Climate](https://codeclimate.com/github/BIAndrews/ec2tagfacts/badges/gpa.svg)](https://codeclimate.com/github/BIAndrews/ec2tagfacts)
 
 #### Table of Contents
 
@@ -157,7 +159,7 @@ bundle install
 rake spec
 ```
 
-TravisCI is currently testing 25 ruby+puppet environments on 40 OS flavor+parameter combinations. This is `1,000` tests per QA cycle.
+TravisCI is currently testing 25 ruby+puppet environments on 49 OS flavor+parameter combinations. This is `1,225` tests per QA cycle.
 
 ### OS Support
 

@@ -10,7 +10,7 @@
 #   Bryan Andrews (https://bryanandrews.org)
 
 require "net/http"
-require 'json'    # hint: yum install ruby-json, or apt-get install ruby-json
+require 'json' # hint: yum install ruby-json, or apt-get install ruby-json
 require "uri"
 require "date"
 
@@ -161,5 +161,4 @@ else
     end
   rescue # Ignore if awscli had any issues
   end
-
 end
