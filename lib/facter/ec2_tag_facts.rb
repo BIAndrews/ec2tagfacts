@@ -10,7 +10,7 @@
 #   Bryan Andrews (https://bryanandrews.org)
 
 require "net/http"
-require 'json'    # hint: yum install ruby-json, or apt-get install ruby-json
+require 'json' # hint: yum install ruby-json, or apt-get install ruby-json
 require "uri"
 require "date"
 
@@ -47,7 +47,7 @@ end
 
 if !instance_id.is_a? String then
 
-  # we couldnt find an instance string, exit not. Not an EC2 instance?
+  # We couldn't find an instance string. Not an EC2 instance?
 
   if (defined?(debug)) != nil
     File.open(debug, 'a') { |file| file.write(Time.now.strftime("%Y/%m/%d %H:%M") + " Something bad happened since there was no error but this isn't a string.\n") }
@@ -55,12 +55,12 @@ if !instance_id.is_a? String then
 
 else
 
-   # if we have an instance ID we continue on...
+   # We have an instance ID we continue on...
 
   ##############################################################################################
   #
   # Get the AWS EC2 instance region from http://instance-data/ and then shorten the region
-  # for example we convert us-west-2b into us-west-2 in order to get the tags
+  # for example we convert us-west-2b into us-west-2 in order to get the tags.
   #
 
   request2 = Net::HTTP::Get.new("/latest/meta-data/placement/availability-zone")
@@ -80,6 +80,7 @@ else
 
   begin
 
+    # This is why aws cli is required
     jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json`
 
     if (defined?(debug)) != nil
@@ -146,7 +147,7 @@ else
         end
 
         if (defined?(debug)) != nil
-          File.open(debug, 'a') { |file| file.write(Time.now.strftime("%Y/%m/%d %H:%M") + " Structured fact result is: #{result}\n") }
+          File.open(debug, 'a') { |file| file.write(Time.now.strftime("%Y/%m/%d %H:%M") + " Structured fact is: #{result}\n") }
         end
 
       else
@@ -160,5 +161,4 @@ else
     end
   rescue # Ignore if awscli had any issues
   end
-
 end
