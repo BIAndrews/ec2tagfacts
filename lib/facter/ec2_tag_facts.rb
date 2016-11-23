@@ -43,7 +43,7 @@ require "date"
 require 'puppet'
 
 # if set, file will be appended to with debug data
-$debug = "/tmp/ec2_tag_facts.log"
+#$debug = "/tmp/ec2_tag_facts.log"
 
 # if this exists we simulate the AWS API tags
 simfile          = Facter.value(':ec2_tag_facts::simfile')
