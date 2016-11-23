@@ -7,15 +7,16 @@
 #### Table of Contents
 
 1. [Overview](#overview)
-2. [Setup - The basics of getting started with ec2tagfacts](#setup)
+2. [Change Log](#change-log)
+3. [Setup - The basics of getting started with ec2tagfacts](#setup)
     * [What ec2tagfacts affects](#what-ec2tagfacts-affects)
     * [Setup requirements](#setup-requirements)
     * [AWS IAM Role](#aws-iam-role)
     * [AWS IAM Policy](#aws-iam-policy)
     * [R10k Example](#r10k-example)
-3. [Usage - Configuration options and additional functionality](#usage)
-4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [RSpec Testing - Automated QA tests](#rspec-testing)
+4. [Usage - Configuration options and additional functionality](#usage)
+5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+6. [RSpec Testing - Automated QA tests](#rspec-testing)
     * [OS Support](#os-support)
     * [AWS Tags Simulation](#aws-tags-simulation)
 7. [Limitations - OS compatibility, etc.](#limitations)
@@ -23,6 +24,12 @@
 ## Overview
 
 This turns EC2 instance tags into puppet facts. For example: `$::ec2_tag_tagname` and structured as `$::ec2_tags['tagname']`. 
+
+## Change Log
+
+* `v0.1.x` - EC2 tags to flat facts
+* `v0.2.x` - EC2 tags to flat facts and structured facts. RSpec automated testing. AWS tag simulator for testing. _(BETA)_
+
 
 ## Setup
 

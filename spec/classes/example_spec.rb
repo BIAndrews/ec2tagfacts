@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'fileutils'
 
+# a fact can be used to change the ec2tagfacts simulation file for testing
 RSpec.configure do |c|
   c.default_facts = {
     ':ec2_tag_facts::simfile' => '/tmp/ec2tagfacts_simulation.json.' + Process.pid.to_s
@@ -45,7 +46,6 @@ describe "AWS tag simulation" do
 end
 
 describe 'ec2tagfacts' do
-
   context 'supported operating systems with simulated tags' do
     on_supported_os.each do |os, facts|
       context "on #{os}" do

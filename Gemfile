@@ -3,13 +3,13 @@ source ENV['GEM_SOURCE'] || "https://rubygems.org"
 group :test do
   gem "rake"
   gem "puppet", ENV['PUPPET_GEM_VERSION'] || '~> 4.2.3'
-  gem "rspec", '< 3.2.0'
+  gem "rspec", '<= 3.5.0'
   gem "rspec-puppet"
   gem "puppetlabs_spec_helper"
   gem "metadata-json-lint"
   gem "rspec-puppet-facts"
-  gem 'rubocop', '0.33.0'
-  gem 'simplecov', '>= 0.11.0'
+  gem 'rubocop'
+  gem 'simplecov', '>= 0.12.0'
   gem 'simplecov-console'
 
   gem "puppet-lint-absolute_classname-check"

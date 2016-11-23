@@ -5,6 +5,7 @@ bundler_args: --without development system_tests
 before_install: 
   - rm Gemfile.lock || true
   - gem update bundler
+  - puppet --version
 script: bundle exec rake test
 rvm:
   - 1.9.3

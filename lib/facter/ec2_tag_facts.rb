@@ -186,7 +186,7 @@ else
 
       debug_msg("Hash of tags found")
 
-      if hash.has_key?("Tags") then
+      if hash.key?("Tags") then
 
         result = {}
 
@@ -196,7 +196,6 @@ else
         #
 
         hash['Tags'].each do |child|
-
           # Name it and make sure its lower case and convert spaces to understores
           name = child['Key'].to_s
           name.downcase!
@@ -211,12 +210,11 @@ else
           debug_msg("Added #{fact} to results hash for structured fact")
 
           # set puppet fact - flat version
-          Facter.add("#{fact}") do
+          Facter.add(fact.to_s) do
             setcode do
               child['Value']
             end
           end
-
         end
 
         ################################################################################
