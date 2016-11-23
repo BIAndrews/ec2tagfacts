@@ -65,6 +65,12 @@ class ec2tagfacts::params {
       $awscli       = 'awscli'
       $enable_epel  = true
     }
+    'Gentoo': {
+      $pippkg       = 'dev-python/pip'
+      $rubyjsonpkg  = 'dev-ruby/json'
+      $awscli       = 'aws-cli'
+      $enable_epel  = false
+    }
     'Amazon': {
       $pippkg       = undef
       $rubyjsonpkg  = 'rubygem18-json'

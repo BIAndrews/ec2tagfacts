@@ -1,6 +1,8 @@
 # ec2tagfacts
 
 [![Build Status](https://travis-ci.org/BIAndrews/ec2tagfacts.svg?branch=master)](https://travis-ci.org/BIAndrews/ec2tagfacts)
+[![Puppet Forge Downloads](https://img.shields.io/puppetforge/dt/bryana/ec2tagfacts.svg)](https://forge.puppet.com/bryana/ec2tagfacts)
+[![Code Climate](https://codeclimate.com/github/BIAndrews/ec2tagfacts/badges/gpa.svg)](https://codeclimate.com/github/BIAndrews/ec2tagfacts)
 
 #### Table of Contents
 
@@ -14,18 +16,20 @@
 3. [Usage - Configuration options and additional functionality](#usage)
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [RSpec Testing - Automated QA tests](#rspec-testing)
-6. [Limitations - OS compatibility, etc.](#limitations)
+    * [OS Support](#os-support)
+7. [Limitations - OS compatibility, etc.](#limitations)
 
 ## Overview
 
-This turns EC2 instance tags into puppet facts. For example: `ec2_tag_*tagname*`. 
+This turns EC2 instance tags into puppet facts. For example: `$::ec2_tag_tagname` and structured as `$::ec2_tags['tagname']`. 
 
 ## Setup
 
 ### What ec2tagfacts affects
 
 * Tag names are prepended with `ec2_tag_`, converted to all lowercase, and non-word character are converted to underscores.
-* You can now use EC2 tags in puppet classes, for example `$::ec2_tag_name`.
+* Tags are also available as a structured fact called `ec2_tags`
+* You can now use EC2 tags in puppet classes, for example `$::ec2_tag_name` or `$::ec2_tags['name']`.
 * EC2 tags are then added to facter.
 * Python pip is installed in order to install the aws cli tool with pip.
 * The AWS cli python package is installed.
@@ -82,6 +86,7 @@ This is the option available to existing EC2 instance without Role assignments. 
 Add this to your `Puppetfile`:
 ~~~
 mod 'bryana/ec2tagfacts', :latest
+mod 'puppetlabs-stdlib', :latest
 mod 'stahnma/epel', :latest
 mod 'puppetlabs/inifile', :latest
 ~~~
@@ -92,12 +97,12 @@ mod 'puppetlabs/inifile', :latest
 
 #### Role Method ####
 ~~~
-class { 'ec2tagfacts': }
+class { '::ec2tagfacts': }
 ~~~
 
 #### Access Key Method ####
 ~~~
-class { 'ec2tagfacts':
+class { '::ec2tagfacts':
   aws_access_key_id      => 'ASJSF34782SJGU',
   aws_secret_access_key  => 'SJG34861gaKHKaDfjq29gfASf427RGHSgesge',
 }
@@ -154,7 +159,36 @@ bundle install
 rake spec
 ```
 
-TravisCI is currently testing 25 ruby+puppet environments on 38 OS flavor+parameter combinations. This is `950` tests per QA cycle.
+TravisCI is currently testing 25 ruby+puppet environments on 49 OS flavor+parameter combinations. This is `1,225` tests per QA cycle.
+
+### OS Support
+
+* RedHat 5
+* RedHat 6
+* RedHat 7
+* CentOS 5
+* CentOS 6
+* CentOS 7
+* Debian 6
+* Debian 7
+* Debian 8
+* OracleLinux 6
+* OracleLinux 7
+* Scientific Linux 5
+* Scientific Linux 6
+* Scientific Linux 7
+* SLES 10
+* SLES 11
+* SLES 12
+* Ubuntu 10
+* Ubuntu 12
+* Ubuntu 14
+* Ubuntu 15
+* Ubuntu 16
+* Gentoo - _experimental_
+* Amazon Linux 2014 - _rspec nodeset not available for automated testing_
+* Amazon Linux 2015 - _rspec nodeset not available for automated testing_
+* Amazon Linux 2016 - _rspec nodeset not available for automated testing however this is the development reference platform_
 
 ## Limitations
 

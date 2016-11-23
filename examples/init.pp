@@ -7,8 +7,7 @@
 #   "Statement": [{
 #      "Effect": "Allow",
 #      "Action": [
-#         "ec2:DescribeInstances", "ec2:DescribeImages",
-#         "ec2:DescribeTags", "ec2:DescribeSnapshots"
+#         "ec2:DescribeTags"
 #      ],
 #      "Resource": "*"
 #   }
@@ -18,3 +17,5 @@
 class { '::ec2tagfacts': }
 
 notify { "AWS EC2 name tag is ${::ec2_tag_name}": }
+notify { "AWS EC2 structured tag is ${::ec2_tags}": }
+notify { "AWS EC2 name tag from structured fact is ${::ec2_tags['name']}": }
