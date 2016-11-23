@@ -8,20 +8,52 @@
 #
 # Author:
 #   Bryan Andrews (https://bryanandrews.org)
-
+#
+# AWS Tag Simulation:
+#   Create the file /etc/puppetlabs/ec2tagfacts_simulation.json like this:
+#
+#{
+#    "Tags": [
+#        {
+#            "ResourceType": "instance", 
+#            "ResourceId": "i-simulation", 
+#            "Value": "dev", 
+#            "Key": "Env"
+#        }, 
+#        {
+#            "ResourceType": "instance", 
+#            "ResourceId": "i-simulation", 
+#            "Value": "server1", 
+#            "Key": "Name"
+#        }, 
+#        {
+#            "ResourceType": "instance", 
+#            "ResourceId": "i-simulation", 
+#            "Value": "bryanandrews@gmail", 
+#            "Key": "Owner"
+#        }
+#    ]
+#}
+#
+#
 require "net/http"
 require 'json' # hint: yum install ruby-json, or apt-get install ruby-json
 require "uri"
 require "date"
+require 'puppet'
 
 # if set, file will be appended to with debug data
-#$debug = "/tmp/ec2_tag_facts.log"
+$debug = "/tmp/ec2_tag_facts.log"
+
+# if this exists we simulate the AWS API tags
+simfile          = Facter.value(':ec2_tag_facts::simfile')
+simfile_failsafe = "/etc/puppetlabs/ec2tagfacts_simulation.json"
 
 ################################################
 #
 # void debug_msg ( string txt )
 #
-# Used to dump debug messages if debug is set
+# Dump debug messages if debug is set
 #
 
 def debug_msg(txt)
@@ -30,40 +62,78 @@ def debug_msg(txt)
   end
 end
 
+################################################
+#
+# bool valid_json ( string json )
+#
+# Verify a string is valid JSON
+#
+
+def valid_json?(json)
+  begin
+    JSON.parse(json)
+    return true
+  rescue JSON::ParserError => e
+    return false
+  end
+end
+
 ####################################################
 #
 # Start
 #
-
-begin
-
-  ################################################################
-  #
-  # Get the AWS EC2 instance ID from http://169.254.169.254/
-  #
-
-  uri = URI.parse("http://169.254.169.254")
-  http = Net::HTTP.new(uri.host, uri.port)
-  http.open_timeout = 4
-  http.read_timeout = 4
-  request = Net::HTTP::Get.new("/latest/meta-data/instance-id")
-  response = http.request(request)
-  instance_id = response.body
-
-  debug_msg("Instance ID is #{instance_id}")
-
-rescue
-
-  debug_msg("This is not an AWS EC2 instance or unable to contact the AWS instance-data web server.")
-
+if !simfile.is_a? String then
+  # no hiera variable found. Use hardcoded failsafe.
+  simfile = simfile_failsafe
 end
 
+debug_msg("Checking for simulation file: " + simfile)
+
+if Pathname.new(simfile).file? then
+
+  debug_msg("Using simulation file: " + simfile)
+
+  #
+  # Simulated data as if we got it from AWS
+  #
+  instance_id = "i-simulation"               # pretend instance ID
+  region      = "us-simulation-3"            # pretend region
+  jsonString  = File.open(simfile).read      # read the file in as string
+
+else
+
+  debug_msg("Using live AWS API: http://169.254.169.254")
+
+  begin
+
+    ################################################################
+    #
+    # Get the AWS EC2 instance ID from http://169.254.169.254/
+    #
+
+    uri = URI.parse("http://169.254.169.254")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.open_timeout = 4
+    http.read_timeout = 4
+    request = Net::HTTP::Get.new("/latest/meta-data/instance-id")
+    response = http.request(request)
+    instance_id = response.body
+
+    debug_msg("Instance ID is #{instance_id}")
+
+  rescue
+
+    debug_msg("This is not an AWS EC2 instance or unable to contact the AWS instance-data web server.")
+
+  end
+
+end
 
 if !instance_id.is_a? String then
 
   # We couldn't find an instance string. Not an EC2 instance?
 
-  debug_msg("Something bad happened since there was no error but this isn't a string.")
+  debug_msg("Something bad happened since there was no error but instance_id isn't a string.")
 
 else
 
@@ -75,11 +145,15 @@ else
   # for example we convert us-west-2b into us-west-2 in order to get the tags.
   #
 
-  request2 = Net::HTTP::Get.new("/latest/meta-data/placement/availability-zone")
-  response2 = http.request(request2)
-  r = response2.body
+  if !region.is_a? String then
 
-  region = /.*-.*-[0-9]/.match(r)
+    request2 = Net::HTTP::Get.new("/latest/meta-data/placement/availability-zone")
+    response2 = http.request(request2)
+    r = response2.body
+
+    region = /.*-.*-[0-9]/.match(r)
+
+  end
 
   debug_msg("Region is #{region}")
 
@@ -91,7 +165,17 @@ else
   begin
 
     # This is why aws cli is required
-    jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json`
+    if !jsonString.is_a? String then
+      jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json`
+    else
+      debug_msg("Using existing jsonString")
+    end
+
+    if !valid_json?(jsonString) then
+      msg = "ERROR: jsonString contains invalid JSON"
+      debug_msg(msg)
+      abort # exit now
+    end
 
     debug_msg("JSON is...\n#{jsonString}")
 

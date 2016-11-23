@@ -17,6 +17,7 @@
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [RSpec Testing - Automated QA tests](#rspec-testing)
     * [OS Support](#os-support)
+    * [AWS Tags Simulation](#aws-tags-simulation)
 7. [Limitations - OS compatibility, etc.](#limitations)
 
 ## Overview
@@ -189,6 +190,43 @@ TravisCI is currently testing 25 ruby+puppet environments on 49 OS flavor+parame
 * Amazon Linux 2014 - _rspec nodeset not available for automated testing_
 * Amazon Linux 2015 - _rspec nodeset not available for automated testing_
 * Amazon Linux 2016 - _rspec nodeset not available for automated testing however this is the development reference platform_
+
+## AWS Tags Simulation
+
+This is a method to simulate AWS EC2 tags for testing. If the file `/etc/puppetlabs/ec2tagfacts_simulation.json` exists and is valid JSON it will be used instead of live AWS API data. This format is a direct copy of the JSON returned from the AWS API.
+
+### File: `/etc/puppetlabs/ec2tagfacts_simulation.json`
+
+### Contents Example:
+```
+{
+    "Tags": [
+        {
+            "ResourceType": "instance", 
+            "ResourceId": "i-simulated", 
+            "Value": "sim-dev", 
+            "Key": "Env"
+        }, 
+        {
+            "ResourceType": "instance", 
+            "ResourceId": "i-simulated", 
+            "Value": "sim-server1", 
+            "Key": "Name"
+        }, 
+        {
+            "ResourceType": "instance", 
+            "ResourceId": "i-simulated", 
+            "Value": "bryan@simulated", 
+            "Key": "Owner"
+        }
+    ]
+}
+```
+### Validating a JSON file
+
+Here is one way to validate a JSON file in Linux using Python.
+
+`cat /etc/puppetlabs/ec2tagfacts_simulation.json | python -m json.tool > /dev/null && echo "Validated fine" || echo "Failed validation. See above error"`
 
 ## Limitations
 
