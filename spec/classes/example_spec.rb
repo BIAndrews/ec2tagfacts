@@ -8,7 +8,7 @@ RSpec.configure do |c|
 end
 
 describe "AWS tag simulation" do
-  it 'write ec2tagfacts_simulation.json tmp file' do
+  it 'write tmp file' do
     #
     #  For simulated EC2 tag facts
     #
@@ -69,7 +69,7 @@ describe 'ec2tagfacts' do
     end
   end
 
-  context 'supported operating systems with key specified' do
+  context 'supported operating systems with simulated tags and key specified' do
     on_supported_os.each do |os, facts|
       context "on #{os}" do
         let(:facts) do
@@ -116,11 +116,10 @@ end
 #
 #  Temp file cleanup
 #
-describe "AWS tag simulation cleanup" do
-  it 'remove ec2tagfacts_simulation.json tmp file' do
+describe "AWS tag simulation tmp file cleanup" do
+  it 'remove tmp file' do
     @filename = "/tmp/ec2tagfacts_simulation.json." + Process.pid.to_s
     FileUtils.rm(@filename)
-    #expect(@filename).not_to exist
     expect(File).not_to exist(@filename)
   end
 end

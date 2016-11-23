@@ -11,7 +11,6 @@ group :test do
   gem 'rubocop', '0.33.0'
   gem 'simplecov', '>= 0.11.0'
   gem 'simplecov-console'
-  gem 'fakefs'
 
   gem "puppet-lint-absolute_classname-check"
   gem "puppet-lint-leading_zero-check"
