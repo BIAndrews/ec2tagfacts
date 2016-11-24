@@ -6,9 +6,6 @@
 # Source:
 #   https://github.com/BIAndrews/ec2tagfacts
 #
-# Author:
-#   Bryan Andrews (https://bryanandrews.org)
-#
 # AWS Tag Simulation:
 #   Create the file /etc/puppetlabs/ec2tagfacts_simulation.json like this:
 #
@@ -42,10 +39,10 @@ require "uri"
 require "date"
 require 'puppet'
 
-# if set, file will be appended to with debug data
+# If set, file will be appended to with debug data
 #$debug = "/tmp/ec2_tag_facts.log"
 
-# if this exists we simulate the AWS API tags
+# If this file exists, and is valid JSON, we simulate the AWS API tags. See file format example above.
 simfile          = Facter.value(':ec2_tag_facts::simfile')
 simfile_failsafe = "/etc/puppetlabs/ec2tagfacts_simulation.json"
 
@@ -111,13 +108,13 @@ else
     # Get the AWS EC2 instance ID from http://169.254.169.254/
     #
 
-    uri = URI.parse("http://169.254.169.254")
-    http = Net::HTTP.new(uri.host, uri.port)
+    uri               = URI.parse("http://169.254.169.254")
+    http              = Net::HTTP.new(uri.host, uri.port)
     http.open_timeout = 4
     http.read_timeout = 4
-    request = Net::HTTP::Get.new("/latest/meta-data/instance-id")
-    response = http.request(request)
-    instance_id = response.body
+    request           = Net::HTTP::Get.new("/latest/meta-data/instance-id")
+    response          = http.request(request)
+    instance_id       = response.body
 
     debug_msg("Instance ID is #{instance_id}")
 
@@ -137,7 +134,7 @@ if !instance_id.is_a? String then
 
 else
 
-   # We have an instance ID we continue on...
+  # We have an instance ID so we continue on ...
 
   ##############################################################################################
   #
@@ -147,11 +144,10 @@ else
 
   if !region.is_a? String then
 
-    request2 = Net::HTTP::Get.new("/latest/meta-data/placement/availability-zone")
+    request2  = Net::HTTP::Get.new("/latest/meta-data/placement/availability-zone")
     response2 = http.request(request2)
-    r = response2.body
-
-    region = /.*-.*-[0-9]/.match(r)
+    r         = response2.body
+    region    = /.*-.*-[0-9]/.match(r)
 
   end
 
@@ -172,8 +168,7 @@ else
     end
 
     if !valid_json?(jsonString) then
-      msg = "ERROR: jsonString contains invalid JSON"
-      debug_msg(msg)
+      debug_msg("ERROR: jsonString contains invalid JSON")
       abort # exit now
     end
 
@@ -228,15 +223,18 @@ else
               result
             end
           end
+          debug_msg("Structured fact is: #{result}")
         end
-
-        debug_msg("Structured fact is: #{result}")
 
       else
 
         debug_msg("No tags found")
 
       end
+
+    else
+
+      debug_msg("Tags key not found in hash")
 
     end
 
