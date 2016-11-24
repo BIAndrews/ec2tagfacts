@@ -8,10 +8,10 @@ group :test do
   gem "puppetlabs_spec_helper"
   gem "metadata-json-lint"
   gem "rspec-puppet-facts"
-  gem 'rubocop'
+  gem 'rubocop', '<= 0.45.0' if RUBY_VERSION >= '2.0.0'
+  gem 'rubocop', '<= 0.33.0' if RUBY_VERSION <= '1.9.3'
   gem 'simplecov', '>= 0.12.0'
   gem 'simplecov-console'
-
   gem "puppet-lint-absolute_classname-check"
   gem "puppet-lint-leading_zero-check"
   gem "puppet-lint-trailing_comma-check"
