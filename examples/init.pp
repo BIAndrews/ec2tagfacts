@@ -16,6 +16,12 @@
 
 class { '::ec2tagfacts': }
 
+# do not install python pip or enable epel
+#class { '::ec2tagfacts': 
+#  pippkg      => false,
+#  enable_epel => false,
+#}
+
 notify { "AWS EC2 name tag is ${::ec2_tag_name}": }
 notify { "AWS EC2 structured tag is ${::ec2_tags}": }
 notify { "AWS EC2 name tag from structured fact is ${::ec2_tags['name']}": }

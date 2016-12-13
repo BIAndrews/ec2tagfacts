@@ -17,11 +17,9 @@
 #   True to enable EPEL automatically, false not to. Automatically set in 
 #   ec2tagfacts::params based on OS family.
 #
-# === Variables
-#
 # [*pippkg*]
 #   Set in ec2tagfacts::params, this is the Python pip package name by OS 
-#   family.
+#   family. False disables python pip package management.
 #
 # [*awscli*]
 #   Set in ec2tagfacts::params, this is the pip package name of awscli.
@@ -50,12 +48,12 @@ class ec2tagfacts (
   $aws_secret_access_key  = undef,
   $aws_cli_ini_settings   = $ec2tagfacts::params::aws_cli_ini_settings,
   $enable_epel            = $ec2tagfacts::params::enable_epel,
+  $pippkg                 = $ec2tagfacts::params::pippkg,
+  $awscli                 = $ec2tagfacts::params::awscli,
+  $rubyjsonpkg            = $ec2tagfacts::params::rubyjsonpkg,
 
 ) inherits ec2tagfacts::params {
 
-  $pippkg                 = $ec2tagfacts::params::pippkg
-  $awscli                 = $ec2tagfacts::params::awscli
-  $rubyjsonpkg            = $ec2tagfacts::params::rubyjsonpkg
 
   if (!is_string($aws_access_key_id)) {
     fail('ERROR: ec2tagfacts::aws_access_key_id must be a string')
@@ -67,10 +65,13 @@ class ec2tagfacts (
 
   if $enable_epel {
     include ::epel
-    Class['epel'] -> Package[$pippkg]
   }
 
-  if $pippkg != undef {
+  if $pippkg != false {
+
+    if $enable_epel {
+      Class['epel'] -> Package[$pippkg]
+    }
 
     package { $pippkg:
       ensure => 'installed',

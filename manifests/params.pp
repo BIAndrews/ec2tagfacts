@@ -4,6 +4,9 @@
 #
 # === Variables
 #
+# [*aws_cli_ini_settings*]
+#   Path to awscli credentials file. Default '/root/.aws/credentials'
+#
 # [*pippkg*]
 #   Set in ec2tagfacts::params, this is the Python pip package name by OS
 #   family.
@@ -30,33 +33,28 @@
 #
 class ec2tagfacts::params {
 
-  $aws_cli_ini_settings   = '/root/.aws/credentials'
+  $aws_cli_ini_settings = '/root/.aws/credentials'
 
   case $::operatingsystem {
     'CentOS', 'RedHat' , 'OEL', 'OracleLinux': {
+      $awscli       = 'awscli'
+      $enable_epel  = true
       if ($::operatingsystemmajrelease + 0) >= (7 + 0) {
-        $pippkg       = 'python-pip'
+        $pippkg       = false # centos7 has pip installed by default even on min
         $rubyjsonpkg  = 'rubygem-json'
-        $awscli       = 'awscli'
-        $enable_epel  = true
       } else {
         $pippkg       = 'python-pip'
         $rubyjsonpkg  = 'ruby-json'
-        $awscli       = 'awscli'
-        $enable_epel  = true
       }
     }
     'Fedora': {
+      $pippkg       = 'python-pip'
+      $awscli       = 'awscli'
+      $enable_epel  = true
       if ($::operatingsystemmajrelease + 0) >= (22 + 0) {
-        $pippkg       = 'python-pip'
         $rubyjsonpkg  = 'rubygem-json'
-        $awscli       = 'awscli'
-        $enable_epel  = true
       } else {
-        $pippkg       = 'python-pip'
         $rubyjsonpkg  = 'ruby-json'
-        $awscli       = 'awscli'
-        $enable_epel  = true
       }
     }
     'Scientific', 'SLC', 'Ascendos', 'CloudLinux', 'PSBM', 'OVS': {
@@ -72,7 +70,7 @@ class ec2tagfacts::params {
       $enable_epel  = false
     }
     'Amazon': {
-      $pippkg       = undef
+      $pippkg       = false
       $rubyjsonpkg  = 'rubygem18-json'
       $awscli       = 'aws-cli'
       $enable_epel  = false

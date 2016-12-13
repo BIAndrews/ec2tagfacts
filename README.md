@@ -150,6 +150,10 @@ Optional. Change the location of the AWS cli credential ini file. Full path expe
 
 Optional. True/false setting. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera.
 
+#####`pippkg`
+
+Optional. String/false setting. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera. This is the python-pip package name to install. False disables installation. Python pip is used to install awscli which is required.
+
 ## RSpec Testing
 
 If bundle isn't already installed it is generally installed with `gem install bundle`.
