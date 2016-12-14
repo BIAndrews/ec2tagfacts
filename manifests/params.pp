@@ -94,11 +94,11 @@ class ec2tagfacts::params {
       $awscli_pkg   = 'apt'
     }
     'SLES', 'SLED', 'OpenSuSE', 'SuSE': {
-      $pippkg       = false
+      $pippkg       = 'python-pip'
       $rubyjsonpkg  = 'ruby-json'
       $awscli       = 'aws-cli'
       $enable_epel  = false
-      $awscli_pkg   = 'zypper'
+      $awscli_pkg   = 'pip'
     }
     default: {
       fail("Unsupported platform: ${::osfamily}/${::operatingsystem}")
