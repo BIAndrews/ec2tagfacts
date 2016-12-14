@@ -12,7 +12,6 @@ describe 'ec2tagfacts' do
           it { is_expected.to contain_class('ec2tagfacts') }
           it { is_expected.to contain_class('ec2tagfacts::params') }
           it { is_expected.to contain_package('awscli') }
-          it { is_expected.to contain_package('python-pip') }
           it { is_expected.to contain_package('ruby-json-package') }
         end
       end

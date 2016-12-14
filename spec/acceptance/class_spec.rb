@@ -13,13 +13,5 @@ describe 'ec2tagfacts class' do
       apply_manifest(pp, :catch_changes  => true)
     end
 
-    describe package('ec2tagfacts') do
-      it { is_expected.to be_installed }
-    end
-
-    describe service('ec2tagfacts') do
-      it { is_expected.to be_enabled }
-      it { is_expected.to be_running }
-    end
   end
 end
