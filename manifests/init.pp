@@ -29,10 +29,26 @@
 #
 # === Examples
 #
+#  /* Autodetect awscli tools provider installation */
 #  class { 'ec2tagfacts':
 #    aws_access_key_id => 'ASFJIJ3IGJ5JSKAJ',
 #    aws_secret_access_key => 'svbasJAB254FHU6hsH5ujxfjdSs',
 #  }
+#
+#  /* Force pip provider installation */
+#  class { 'ec2tagfacts':
+#    aws_access_key_id => 'ASFJIJ3IGJ5JSKAJ',
+#    aws_secret_access_key => 'svbasJAB254FHU6hsH5ujxfjdSs',
+#    awscli_pkg => 'pip',
+#    awscli => 'awscli',
+#  }
+#
+#  /* Force yum provider installation and don't set an access key or secret since we use a Role */
+#  class { 'ec2tagfacts':
+#    awscli_pkg => 'yum',
+#    awscli => 'awscli',
+#  }
+#
 #
 # === Authors
 #
@@ -51,6 +67,7 @@ class ec2tagfacts (
   $pippkg                 = $ec2tagfacts::params::pippkg,
   $awscli                 = $ec2tagfacts::params::awscli,
   $rubyjsonpkg            = $ec2tagfacts::params::rubyjsonpkg,
+  $awscli_pkg             = $ec2tagfacts::params::awscli_pkg,
 
 ) inherits ec2tagfacts::params {
 
@@ -79,7 +96,7 @@ class ec2tagfacts (
 
     package { $awscli:
       ensure   => 'installed',
-      provider => 'pip',
+      provider => $awscli_pkg,
       require  => Package[$pippkg],
     }
 
@@ -87,6 +104,7 @@ class ec2tagfacts (
 
     package { $awscli:
       ensure   => 'installed',
+      provider => $awscli_pkg,
     }
 
   }

@@ -17,6 +17,7 @@
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [RSpec Testing - Automated QA tests](#rspec-testing)
     * [OS Support](#os-support)
+6. [Change Log](#change-log)
 7. [Limitations - OS compatibility, etc.](#limitations)
 
 ## Overview
@@ -31,7 +32,7 @@ This turns EC2 instance tags into puppet facts. For example: `$::ec2_tag_tagname
 * Tags are also available as a structured fact called `ec2_tags`
 * You can now use EC2 tags in puppet classes, for example `$::ec2_tag_name` or `$::ec2_tags['name']`.
 * EC2 tags are then added to facter.
-* Python pip is installed in order to install the aws cli tool with pip.
+* Python pip is installed in order to install the aws cli tool with pip if pip is the provider for your platform. For example CentOS7 epel provides awscli so that us used.
 * The AWS cli python package is installed.
 * Optinally provided AWS credentials are set in the /root/.aws/credentials INI file. Role access method is preferred.
 * EPEL is required for RHEL based systems and is automatically setup on them unless you disable that feature.
@@ -148,11 +149,15 @@ Optional. Change the location of the AWS cli credential ini file. Full path expe
 
 #####`enable_epel`
 
-Optional. True/false setting. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera.
+Optional. True/false. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera.
 
 #####`pippkg`
 
-Optional. String/false setting. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera. This is the python-pip package name to install. False disables installation. Python pip is used to install awscli which is required.
+Optional. String/false. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera. This is the python-pip package name to install. False disables installation. Python pip is used to install awscli which is required.
+
+#####`awscli_pkg`
+
+Optional. String. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera. This is the awscli package provider to use. Python pip is used to install awscli unless a platform package is available.
 
 ## RSpec Testing
 
@@ -193,6 +198,11 @@ TravisCI is currently testing 25 ruby+puppet environments on 49 OS flavor+parame
 * Amazon Linux 2014 - _rspec nodeset not available for automated testing_
 * Amazon Linux 2015 - _rspec nodeset not available for automated testing_
 * Amazon Linux 2016 - _rspec nodeset not available for automated testing however this is the development reference platform_
+
+## Change Log
+
+* `v0.2.0` - Added structured facts. Better support on platforms for using pip package or platform package.
+* `v0.1.x` - Initial release
 
 ## Limitations
 
