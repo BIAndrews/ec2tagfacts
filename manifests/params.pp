@@ -96,7 +96,7 @@ class ec2tagfacts::params {
     'SLES', 'SLED', 'OpenSuSE', 'SuSE': {
       $pippkg       = 'python-pip'
       $rubyjsonpkg  = 'ruby-json'
-      $awscli       = 'aws-cli'
+      $awscli       = 'awscli'
       $enable_epel  = false
       $awscli_pkg   = 'pip'
     }
