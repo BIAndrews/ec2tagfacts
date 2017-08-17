@@ -26,6 +26,7 @@
 #
 # [*rubyjsonpkg*]
 #   Set in ec2tagfacts::params, this is the ruby-json package name.
+#   False disables ruby-json package package management.
 #
 # === Examples
 #
@@ -109,7 +110,7 @@ class ec2tagfacts (
 
   }
 
-  if $rubyjsonpkg != undef {
+  if $rubyjsonpkg != false {
     package { 'ruby-json-package':
       ensure => 'installed',
       name   => $rubyjsonpkg,

@@ -159,6 +159,12 @@ Optional. String/false. Autodetected in ec2tagfacts::params based on OS family. 
 
 Optional. String. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera. This is the awscli package provider to use. Python pip is used to install awscli unless a platform package is available.
 
+#####`rubyjsonpkg`
+
+Optional. String. Autodetected in ec2tagfacts::params based on OS family. You can override that with the parameter or in hiera. This is the Ruby JSON package name to use. To disable
+management of this package, set to false.
+
+
 ## RSpec Testing
 
 If bundle isn't already installed it is generally installed with `gem install bundle`.
