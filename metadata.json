@@ -1,6 +1,6 @@
 {
   "name": "bryana-ec2tagfacts",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Bryan Andrews",
   "summary": "AWS EC2 tags exported as puppet facts and AWS cli tool installed.",
   "license": "Apache-2.0",
@@ -86,12 +86,8 @@
   ],
   "requirements": [
     {
-      "name": "pe",
-      "version_requirement": ">=3.8.0 < 2016.4.0"
-    },
-    {
       "name": "puppet",
-      "version_requirement": ">= 3.3.0"
+      "version_requirement": ">=3.8.0 < 2016.4.0"
     }
   ],
   "dependencies": [
