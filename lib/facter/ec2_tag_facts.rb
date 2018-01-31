@@ -15,7 +15,11 @@ require "uri"
 require "date"
 
 # if set, file will be appended to with debug data
-$debug = "/tmp/ec2_tag_facts.log"
+if Facter.value('operatingsystem') == 'windows'
+	$debug = "c:\temp\ec2_tag_facts.log"
+else
+	$debug = "/tmp/ec2_tag_facts.log"
+end
 
 ################################################
 #
