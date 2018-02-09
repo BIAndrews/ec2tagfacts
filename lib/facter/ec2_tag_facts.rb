@@ -13,15 +13,18 @@ require "net/http"
 require 'json' # hint: yum install ruby-json, or apt-get install ruby-json
 require "uri"
 require "date"
+require 'aws-sdk'
+
 
 # if set, file will be appended to with debug data
 if Facter.value('operatingsystem') == 'windows'
-	$debug = "c:\temp\ec2_tag_facts.log"
+  $debug = 'c:\temp\ec2_tag_facts.log'
 else
-	$debug = "/tmp/ec2_tag_facts.log"
+  $debug = "/tmp/ec2_tag_facts.log"
 end
 
-################################################
+
+
 #
 # void debug_msg ( string txt )
 #
@@ -83,66 +86,38 @@ else
   response2 = http.request(request2)
   r = response2.body
 
-  region = /.*-.*-[0-9]/.match(r)
+  region = r.chop
 
   debug_msg("Region is #{region}")
+  ec2 = Aws::EC2::Client.new(region: region)
+  instance = ec2.describe_instances(instance_ids: [instance_id])
+  tags = instance.reservations[0].instances[0].tags
 
-  ###########################################################
-  #
-  # Get the aws ec2 instance tags as a JSON string
-  #
+#
+# Loop through all tags
+#
 
-  begin
-
-    # This is why aws cli is required
-    jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json`
-
-    debug_msg("JSON is...\n#{jsonString}")
-
-    # convert json string to hash
-    hash = JSON.parse(jsonString)
-
-    if hash.is_a? Hash then
-
-      debug_msg("Hash of tags found")
-
-      if hash.has_key?("Tags") then
-
-        result = {}
-
-        ################################################################################
-        #
-        # Loop through all tags
-        #
-
-        hash['Tags'].each do |child|
-
+  result = {}
+  tags.each do |tag|
           # Name it and make sure its lower case and convert spaces to understores
-          name = child['Key'].to_s
-          name.downcase!
+          name = tag['key'].to_s.downcase
           name.gsub!(/\W+/, "_")
           fact = "ec2_tag_#{name}"
+          debug_msg("Setting fact #{fact} to #{tag['value']}")
 
-          debug_msg("Setting fact #{fact} to #{child['Value']}")
 
           # append to the hash for structured fact later
-          result[name] = child['Value']
+          result[name] = tag['value']
 
           debug_msg("Added #{fact} to results hash for structured fact")
 
           # set puppet fact - flat version
           Facter.add("#{fact}") do
             setcode do
-              child['Value']
+              tag['value']
             end
           end
-
-        end
-
-        ################################################################################
-        #
-        # Set structured fact
-        #
+  
 
         if defined?(result) != nil
           Facter.add(:ec2_tags) do
@@ -153,18 +128,7 @@ else
         end
 
         debug_msg("Structured fact is: #{result}")
-
-      else
-
-        debug_msg("No tags found")
-
-      end
-
-    end
-
-  rescue # Ignore if awscli had any issues
-
-    debug_msg("awscli exec failed")
-
   end
+
+
 end
