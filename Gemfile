@@ -12,7 +12,7 @@ group :test do
     gem "metadata-json-lint"
   end
   gem "rspec-puppet-facts"
-  gem 'rubocop', '0.33.0'
+  gem 'rubocop', '~> 0.49.0'
   gem 'simplecov', '>= 0.11.0'
   gem 'simplecov-console', '< 0.4.2' 
 
