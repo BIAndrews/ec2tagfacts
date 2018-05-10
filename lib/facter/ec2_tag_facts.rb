@@ -14,15 +14,12 @@ require 'json' # hint: yum install ruby-json, or apt-get install ruby-json
 require "uri"
 require "date"
 require 'aws-sdk'
-
+require 'tmpdir'
 
 # if set, file will be appended to with debug data
-if Facter.value('operatingsystem') == 'windows'
-  $debug = 'c:\temp\ec2_tag_facts.log'
-else
-  $debug = "/tmp/ec2_tag_facts.log"
-end
-
+logfilename = 'ec2_tag_facts.log'
+prefix_tmp_path = Dir.tmpdir() 
+$debug = File.join(prefix_tmp_path, logfilename)
 
 
 #
