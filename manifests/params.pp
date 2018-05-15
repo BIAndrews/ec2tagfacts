@@ -80,11 +80,19 @@ class ec2tagfacts::params {
       $awscli_pkg   = 'portage'
     }
     'Amazon': {
-      $pippkg       = false
-      $rubyjsonpkg  = 'rubygem18-json'
-      $awscli       = 'aws-cli'
-      $enable_epel  = false
-      $awscli_pkg   = 'yum'
+      # Test for Amazon Linux 2
+      if $::kernelrelease =~ /.*amzn2.*/ {
+        $rubyjsonpkg  = 'rubygem-json'
+        $pippkg       = 'python2-pip'
+        $awscli       = 'awscli'
+        $awscli_pkg   = 'pip'
+      } else {
+        $pippkg       = false
+        $rubyjsonpkg  = 'rubygem18-json'
+        $awscli       = 'aws-cli'
+        $enable_epel  = false
+        $awscli_pkg   = 'yum'
+      }
     }
     'ubuntu', 'debian': {
       $pippkg       = false
