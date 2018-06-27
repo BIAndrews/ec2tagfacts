@@ -34,7 +34,7 @@ This turns EC2 instance tags into puppet facts. For example: `$::ec2_tag_tagname
 * EC2 tags are then added to facter.
 * Python pip is installed in order to install the aws cli tool with pip if pip is the provider for your platform. For example CentOS7 epel provides awscli so that us used.
 * The AWS cli python package is installed.
-* Optinally provided AWS credentials are set in the /root/.aws/credentials INI file. Role access method is preferred.
+* Optionally provided AWS credentials are set in the /root/.aws/credentials INI file. Role access method is preferred.
 * EPEL is required for RHEL based systems and is automatically setup on them unless you disable that feature.
 
 ### Setup Requirements
