@@ -105,6 +105,15 @@ else
 
           # append to the hash for structured fact later
           result[name] = tag['value']
+          if name =~ /env/
+		if tag['value'] == "prod"
+			subdomain = "#{tag['value']}.#{region}"
+		else
+			subdomain = "#{tag['value']}"
+		end
+		result["subdomain"] = subdomain
+  
+	 end
 
           debug_msg("Added #{fact} to results hash for structured fact")
 
