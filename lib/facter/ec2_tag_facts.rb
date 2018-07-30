@@ -15,6 +15,7 @@ require "uri"
 require "date"
 require 'aws-sdk'
 require 'tmpdir'
+require 'ipaddress'
 
 # if set, file will be appended to with debug data
 logfilename = 'ec2_tag_facts.log'
@@ -46,6 +47,7 @@ begin
   # Get the AWS EC2 instance ID from http://169.254.169.254/
   #
 
+  result = {}
   uri = URI.parse("http://169.254.169.254")
   http = Net::HTTP.new(uri.host, uri.port)
   http.open_timeout = 4
@@ -53,8 +55,19 @@ begin
   request = Net::HTTP::Get.new("/latest/meta-data/instance-id")
   response = http.request(request)
   instance_id = response.body
+  request = Net::HTTP::Get.new("/latest/meta-data/network/interfaces/macs/")
+  response = http.request(request)
+  mac = response.body
+  request = Net::HTTP::Get.new("/latest/meta-data/network/interfaces/macs/#{mac}vpc-ipv4-cidr-block")
+  response = http.request(request)
+  vpc_cidr = response.body
+  net = IPAddress("#{vpc_cidr}")
 
   debug_msg("Instance ID is #{instance_id}")
+  debug_msg("MAC address is #{mac}")
+  debug_msg("VPC CIDR is #{vpc_cidr}")
+  debug_msg("network address is #{net.address}")
+  debug_msg("subnet mask is #{net.netmask}")
 
 rescue
 
@@ -62,6 +75,13 @@ rescue
 
 end
 
+fact = "ec2_tag_network"
+result["vpc_network"] = "#{net.address} #{net.netmask}"
+Facter.add("#{fact}") do
+       	setcode do
+        	"#{net.address} #{net.netmask}"
+        end
+end
 
 if !instance_id.is_a? String then
 
@@ -94,7 +114,6 @@ else
 # Loop through all tags
 #
 
-  result = {}
   tags.each do |tag|
           # Name it and make sure its lower case and convert spaces to understores
           name = tag['key'].to_s.downcase
@@ -107,11 +126,18 @@ else
           result[name] = tag['value']
           if name =~ /env/
 		if tag['value'] == "prod"
-			subdomain = "#{tag['value']}.#{region}"
+			region_env = "#{region}.#{tag['value']}"
 		else
-			subdomain = "#{tag['value']}"
+			region_env = "#{tag['value']}"
 		end
-		result["subdomain"] = subdomain
+		result["region_env"] = region_env
+          	Facter.add("ec2_tag_region_env") do
+            		setcode do
+				region_env
+            		end
+          	end
+  
+		
   
 	 end
 
