@@ -62,6 +62,7 @@ begin
   response = http.request(request)
   vpc_cidr = response.body
   net = IPAddress("#{vpc_cidr}")
+  vpn_octets = "#{net[1]}.#{net[2]}"
 
   debug_msg("Instance ID is #{instance_id}")
   debug_msg("MAC address is #{mac}")
@@ -80,6 +81,14 @@ result["vpc_network"] = "#{net.address} #{net.netmask}"
 Facter.add("#{fact}") do
        	setcode do
         	"#{net.address} #{net.netmask}"
+        end
+end
+
+fact = "ec2_tag_vpn_octets"
+result["vpc_octets"] = "#{vpn_octets}"
+Facter.add("#{fact}") do
+       	setcode do
+        	vpn_octets
         end
 end
 
