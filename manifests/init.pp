@@ -69,6 +69,9 @@ class ec2tagfacts (
   $awscli                 = $ec2tagfacts::params::awscli,
   $rubyjsonpkg            = $ec2tagfacts::params::rubyjsonpkg,
   $awscli_pkg             = $ec2tagfacts::params::awscli_pkg,
+  $install_system_gems    = $ec2tagfacts::params::install_system_gems,
+  $install_puppet_gems    = $ec2tagfacts::params::install_puppet_gems,
+  $install_gems           = $ec2tagfacts::params::install_gems,
 
 ) inherits ec2tagfacts::params {
 
@@ -107,6 +110,28 @@ class ec2tagfacts (
       ensure   => 'installed',
       provider => $awscli_pkg,
     }
+
+  }
+
+  $install_gems.each | $gem | {
+  	if $facts['os']['family'] != 'windows' {
+		if $install_system_gems {
+			contain ::psick::ruby
+			package { $gem:
+				ensure      => 'present',
+				provider => 'gem',
+				require      => Class['psick::ruby'],
+			}
+		}
+  	}
+ 
+  	if $install_puppet_gems {
+		package { "puppet_${gem}":
+			ensure     => 'present',
+			name      => $gem,
+			provider => 'puppet_gem',
+		}
+	}
 
   }
 

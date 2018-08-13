@@ -134,11 +134,7 @@ else
           # append to the hash for structured fact later
           result[name] = tag['value']
           if name =~ /env/
-		if tag['value'] == "prod"
-			region_env = "#{region}.#{tag['value']}"
-		else
-			region_env = "#{tag['value']}"
-		end
+		region_env = "#{region}.#{tag['value']}"
 		result["region_env"] = region_env
           	Facter.add("ec2_tag_region_env") do
             		setcode do

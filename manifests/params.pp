@@ -37,6 +37,9 @@
 class ec2tagfacts::params {
 
   $aws_cli_ini_settings = '/root/.aws/credentials'
+  $install_gems        = [ 'ipaddress' , 'aws-sdk' ]
+  $install_system_gems = true
+  $install_puppet_gems = true
 
   case $::operatingsystem {
     'CentOS', 'RedHat' , 'OEL', 'OracleLinux': {
