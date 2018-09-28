@@ -13,6 +13,10 @@
 # [*aws_cli_ini_settings*]
 #   Full path to the aws cli ini file to store credentials. Default is provided.
 #
+# [*manage_awscli*]
+#   True to have this module manage awscli installation, false not to. If false
+#   awscli must be installed by other means.
+#
 # [*enable_epel*]
 #   True to enable EPEL automatically, false not to. Automatically set in 
 #   ec2tagfacts::params based on OS family.
@@ -64,6 +68,7 @@ class ec2tagfacts (
   $aws_access_key_id      = undef,  # if undef we assume they are setup correctly already
   $aws_secret_access_key  = undef,
   $aws_cli_ini_settings   = $ec2tagfacts::params::aws_cli_ini_settings,
+  $manage_awscli          = true,
   $enable_epel            = $ec2tagfacts::params::enable_epel,
   $pippkg                 = $ec2tagfacts::params::pippkg,
   $awscli                 = $ec2tagfacts::params::awscli,
@@ -81,33 +86,35 @@ class ec2tagfacts (
     fail('ERROR: ec2tagfacts::aws_secret_access_key must be a string')
   }
 
-  if $enable_epel {
-    include ::epel
-  }
-
-  if $pippkg != false {
-
+  if $manage_awscli {
     if $enable_epel {
-      Class['epel'] -> Package[$pippkg]
+      include ::epel
     }
 
-    package { $pippkg:
-      ensure => 'installed',
+    if $pippkg != false {
+
+      if $enable_epel {
+        Class['epel'] -> Package[$pippkg]
+      }
+
+      package { $pippkg:
+        ensure => 'installed',
+      }
+
+      package { $awscli:
+        ensure   => 'installed',
+        provider => $awscli_pkg,
+        require  => Package[$pippkg],
+      }
+
+    } else {
+
+      package { $awscli:
+        ensure   => 'installed',
+        provider => $awscli_pkg,
+      }
+
     }
-
-    package { $awscli:
-      ensure   => 'installed',
-      provider => $awscli_pkg,
-      require  => Package[$pippkg],
-    }
-
-  } else {
-
-    package { $awscli:
-      ensure   => 'installed',
-      provider => $awscli_pkg,
-    }
-
   }
 
   if $rubyjsonpkg != false {
