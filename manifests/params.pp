@@ -81,7 +81,7 @@ class ec2tagfacts::params {
     }
     'Amazon': {
       # Test for Amazon Linux 2
-      if $::kernelrelease =~ /.*amzn2.*/ {
+      if $::operatingsystemmajrelease == '2' {
         $rubyjsonpkg  = 'rubygem-json'
         $pippkg       = 'python2-pip'
         $awscli       = 'awscli'
