@@ -33,11 +33,6 @@ def debug_msg(txt)
   end
 end
 
-if Facter.value('operatingsystem') == 'windows'
-	debug_msg("Windows system ipaddress module ignored")
-else
-	require 'ipaddress'
-end
 
 ####################################################
 #
@@ -65,27 +60,34 @@ begin
   request = Net::HTTP::Get.new("/latest/meta-data/network/interfaces/macs/#{mac}vpc-ipv4-cidr-block")
   response = http.request(request)
   vpc_cidr = response.body
-  net = IPAddress("#{vpc_cidr}")
-  vpn_octets = "#{net[1]}.#{net[2]}"
 
   debug_msg("Instance ID is #{instance_id}")
   debug_msg("MAC address is #{mac}")
   debug_msg("VPC CIDR is #{vpc_cidr}")
-  debug_msg("network address is #{net.address}")
-  debug_msg("subnet mask is #{net.netmask}")
 
+if Facter.value('operatingsystem') == 'windows'
+	debug_msg("Windows system ipaddress module ignored")
+else
+	require 'ipaddress'
+  	net = IPAddress("#{vpc_cidr}")
+  	vpn_octets = "#{net[1]}.#{net[2]}"
+	debug_msg("network address is #{net.address}")
+	debug_msg("subnet mask is #{net.netmask}")
+end
 rescue
 
   debug_msg("This is not an AWS EC2 instance or unable to contact the AWS instance-data web server.")
 
 end
 
-fact = "ec2_tag_network"
-result["vpc_network"] = "#{net.address} #{net.netmask}"
-Facter.add("#{fact}") do
-       	setcode do
-        	"#{net.address} #{net.netmask}"
-        end
+if !defined?(net).nil?
+	fact = "ec2_tag_network"
+	result["vpc_network"] = "#{net.address} #{net.netmask}"
+	Facter.add("#{fact}") do
+       		setcode do
+        		"#{net.address} #{net.netmask}"
+        	end
+	end
 end
 
 fact = "ec2_tag_vpn_octets"
