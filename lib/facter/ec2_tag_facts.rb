@@ -15,13 +15,11 @@ require "uri"
 require "date"
 require 'aws-sdk'
 require 'tmpdir'
-require 'ipaddress'
 
 # if set, file will be appended to with debug data
 logfilename = 'ec2_tag_facts.log'
 prefix_tmp_path = Dir.tmpdir() 
 $debug = File.join(prefix_tmp_path, logfilename)
-
 
 #
 # void debug_msg ( string txt )
@@ -33,6 +31,12 @@ def debug_msg(txt)
   if $debug.is_a? String
     File.open($debug, 'a') { |file| file.write(Time.now.strftime("%Y/%m/%d %H:%M") + " " + txt + "\n") }
   end
+end
+
+if Facter.value('operatingsystem') == 'windows'
+	debug_msg("Windows system ipaddress module ignored")
+else
+	require 'ipaddress'
 end
 
 ####################################################
