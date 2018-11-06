@@ -80,7 +80,7 @@ rescue
 
 end
 
-if !defined?(net).nil?
+if Facter.value('operatingsystem') != 'windows'
 	fact = "ec2_tag_network"
 	result["vpc_network"] = "#{net.address} #{net.netmask}"
 	Facter.add("#{fact}") do
