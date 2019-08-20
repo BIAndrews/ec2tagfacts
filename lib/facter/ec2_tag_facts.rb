@@ -13,6 +13,8 @@ require "net/http"
 require 'json' # hint: yum install ruby-json, or apt-get install ruby-json
 require "uri"
 require "date"
+require 'open3'
+
 
 # if set, file will be appended to with debug data
 #$debug = "/tmp/ec2_tag_facts.log"
