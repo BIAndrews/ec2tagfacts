@@ -35,8 +35,20 @@ end
 # Start
 #
 
-begin
 
+  ################################################################
+  #
+  # Test if this fact is allowed to run on the host first
+  #
+
+if File.exist? "/root/.aws/.ec2tags_enabled"
+  debug_msg("ec2tags have been disabled for this node")
+else
+  debug_msg("ec2tags have been enabled for this node")
+  exit!
+end
+  
+begin
   ################################################################
   #
   # Get the AWS EC2 instance ID from http://169.254.169.254/
@@ -87,6 +99,14 @@ else
   #
   # Get the aws ec2 instance tags as a JSON string
   #
+  # If a credential file is supplied use the profile puppet_ec2tags and not the default profile
+
+  profile = ""
+  if File.exist? "/root/.aws/.ectags_use_credentials_file"
+    profile = "--profile=puppet_ec2tags"
+    debug_msg("Using credentials file with profile of puppet_ec2tags")
+  end
+
 
   begin
 
@@ -94,7 +114,7 @@ else
     # Making up to 6 attempts with sleep time ranging between 4-10 seconds after each unsuccessful attempt
     for i in 1..6
       # This is why aws cli is required
-      jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json`
+      jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json #{profile}`
       break if jsonString != ''
       sleep rand(4..10)
     end
