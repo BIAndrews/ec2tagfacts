@@ -74,6 +74,7 @@ class ec2tagfacts (
   $awscli                 = $ec2tagfacts::params::awscli,
   $rubyjsonpkg            = $ec2tagfacts::params::rubyjsonpkg,
   $awscli_pkg             = $ec2tagfacts::params::awscli_pkg,
+  Boolean $facter_enable  = true,
 
 ) inherits ec2tagfacts::params {
 
@@ -124,18 +125,31 @@ class ec2tagfacts (
     }
   }
 
+  $directory = dirname($aws_cli_ini_settings)
+  file { $directory:
+    ensure  => directory,
+    recurse => true,
+  }
+
+  $facter_endable_flag = "${directory}/.ec2tags_enabled"
+
+  if $facter_enable {
+    $facter_ensure = 'present'
+  } else {
+    $facter_ensure = 'absent'
+  }
+
+  file {$facter_endable_flag:
+    ensure => $facter_ensure
+  }
+
   if ($aws_secret_access_key != undef) and ($aws_access_key_id != undef) {
 
-    $directory = dirname($aws_cli_ini_settings)
-    file { $directory:
-      ensure  => directory,
-      require => Package[$awscli],
-      recurse => true,
-    }
+
     ini_setting { 'aws_access_key_id setting':
       ensure  => present,
       path    => $aws_cli_ini_settings,
-      section => 'default',
+      section => 'puppet_ec2tags',
       setting => 'aws_access_key_id',
       value   => $aws_access_key_id,
       require => File[$directory],
@@ -143,12 +157,22 @@ class ec2tagfacts (
     ini_setting { 'aws_secret_access_key setting':
       ensure  => present,
       path    => $aws_cli_ini_settings,
-      section => 'default',
+      section => 'puppet_ec2tags',
       setting => 'aws_secret_access_key',
       value   => $aws_secret_access_key,
       require => File[$directory],
     }
 
+    $use_credentials_file = 'present'
+
+  } else {
+
+    $use_credentials_file = 'absent'
+
+  }
+
+  file {"${directory}/.ectags_use_credentials_file":
+    ensure => $use_credentials_file,
   }
 
 }
