@@ -13,6 +13,8 @@ require "net/http"
 require 'json' # hint: yum install ruby-json, or apt-get install ruby-json
 require "uri"
 require "date"
+require 'open3'
+
 
 # if set, file will be appended to with debug data
 #$debug = "/tmp/ec2_tag_facts.log"
@@ -94,7 +96,14 @@ else
     # Making up to 6 attempts with sleep time ranging between 4-10 seconds after each unsuccessful attempt
     for i in 1..6
       # This is why aws cli is required
-      jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json`
+      debug_msg("aws ec2 describe-tags --filters \"Name=resource-id,Values=#{instance_id}\" --region #{region} --output json")
+      jsonString, stderr_str, status = Open3.capture3("aws ec2 describe-tags --filters \"Name=resource-id,Values=#{instance_id}\" --region #{region} --output json")
+
+      # If the instance does not have permission this will never work
+      if stderr_str.include? "UnauthorizedOperation" then
+        debug_msg("Instance does not have permission to access its tags")
+        return
+      end
       break if jsonString != ''
       sleep rand(4..10)
     end
