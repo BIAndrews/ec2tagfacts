@@ -48,7 +48,7 @@ begin
   http.read_timeout = 4
 
   # grab token for 10 minutes
-  token_request = Net::HTTP::Get.new('/latest/api/token')
+  token_request = Net::HTTP::Put.new('/latest/api/token')
   token_request['X-aws-ec2-metadata-token-ttl-seconds'] = '600'
   token = http.request(token_request).body
 
