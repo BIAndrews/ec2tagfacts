@@ -46,7 +46,14 @@ begin
   http = Net::HTTP.new(uri.host, uri.port)
   http.open_timeout = 4
   http.read_timeout = 4
+
+  # grab token for 10 minutes
+  token_request = Net::HTTP::Put.new('/latest/api/token')
+  token_request['X-aws-ec2-metadata-token-ttl-seconds'] = '600'
+  token = http.request(token_request).body
+
   request = Net::HTTP::Get.new("/latest/meta-data/instance-id")
+  request['X-aws-ec2-metadata-token'] = token
   response = http.request(request)
   instance_id = response.body
 
@@ -76,6 +83,7 @@ else
   #
 
   request2 = Net::HTTP::Get.new("/latest/meta-data/placement/availability-zone")
+  request2['X-aws-ec2-metadata-token'] = token
   response2 = http.request(request2)
   r = response2.body
 
