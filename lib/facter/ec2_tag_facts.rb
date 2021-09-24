@@ -13,6 +13,7 @@ require "net/http"
 require 'json' # hint: yum install ruby-json, or apt-get install ruby-json
 require "uri"
 require "date"
+require "aws-sdk-ec2"
 
 # if set, file will be appended to with debug data
 #$debug = "/tmp/ec2_tag_facts.log"
@@ -88,27 +89,21 @@ else
   # Get the aws ec2 instance tags as a JSON string
   #
 
+  # Initialize EC2 client (uses exponential backoff by default for retries)
+  ec2 = Aws::EC2::Client.new(
+    region: region.to_s,
+    retry_limit: 20,
+  )
+
   begin
 
-    # Some edge cases may require multiple attempts to re-run 'aws ec2 describe-tags' due to API rate limits
-    # Making up to 6 attempts with sleep time ranging between 4-10 seconds after each unsuccessful attempt
-    for i in 1..6
-      # This is why aws cli is required
-      jsonString = `aws ec2 describe-tags --filters "Name=resource-id,Values=#{instance_id}" --region #{region} --output json`
-      break if jsonString != ''
-      sleep rand(4..10)
-    end
+    resp = ec2.describe_tags({filters: [{ name: 'resource-id', values: [instance_id]}]}).to_h
 
-    debug_msg("JSON is...\n#{jsonString}")
-
-    # convert json string to hash
-    hash = JSON.parse(jsonString)
-
-    if hash.is_a? Hash then
+    if resp.is_a? Hash then
 
       debug_msg("Hash of tags found")
 
-      if hash.has_key?("Tags") then
+      if resp.has_key?(:tags) then
 
         result = {}
 
@@ -117,25 +112,25 @@ else
         # Loop through all tags
         #
 
-        hash['Tags'].each do |child|
+        resp[:tags].each do |child|
 
           # Name it and make sure its lower case and convert spaces to understores
-          name = child['Key'].to_s
+          name = child[:key].to_s
           name.downcase!
           name.gsub!(/\W+/, "_")
           fact = "ec2_tag_#{name}"
 
-          debug_msg("Setting fact #{fact} to #{child['Value']}")
+          debug_msg("Setting fact #{fact} to #{child[:value]}")
 
           # append to the hash for structured fact later
-          result[name] = child['Value']
+          result[name] = child[:value]
 
           debug_msg("Added #{fact} to results hash for structured fact")
 
           # set puppet fact - flat version
           Facter.add("#{fact}") do
             setcode do
-              child['Value']
+              child[:value]
             end
           end
 
@@ -164,9 +159,9 @@ else
 
     end
 
-  rescue # Ignore if awscli had any issues
+  rescue # Ignore if aws client had any issues
 
-    debug_msg("awscli exec failed")
+    debug_msg("aws client failed")
 
   end
 end
